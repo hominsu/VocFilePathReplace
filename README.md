@@ -1,0 +1,2 @@
+# VocFilePathReplace
+这个工具可以替换voc数据集中xml文件中的图片地址
