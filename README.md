@@ -16,13 +16,3 @@
 例子：
 
 > .\main.exe F:\DataSet\ D:\xyolo\images\train\
-
-***
-
-Usage:
-
-> main.exe [DataSet Path] [Replace Path]
-
-For example:
-
-> .\main.exe F:\DataSet\ D:\xyolo\images\train\
