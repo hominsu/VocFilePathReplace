@@ -5,9 +5,10 @@
 
 void getFiles(std::string path, std::vector<std::string>& files)
 {
-	long hFile = 0;
+	long long hFile = 0;
 	struct _finddata_t fileinfo;
 	std::string p;
+
 	if((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) !=  -1)
 	{
 		do
