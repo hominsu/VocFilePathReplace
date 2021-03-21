@@ -11,10 +11,10 @@
 
 使用方法：
 
-> main.exe [DataSet Path] [Replace Path]
+> VocFilePathRepalce.exe [DataSet Path] [Replace Path]
 
-> main.exe [数据集所在的文件路径] [替换xml中的图片路径]
+> VocFilePathRepalce.exe [数据集所在的文件路径] [替换xml中的图片路径]
 
 例子：
 
-> .\main.exe F:\DataSet\ D:\xyolo\images\train\
+> .\VocFilePathRepalce.exe F:\DataSet\ D:\xyolo\images\train\
