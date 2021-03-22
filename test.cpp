@@ -27,7 +27,7 @@ ThreadPool::ThreadPool(const std::vector<std::string>& filePaths)
     this->filePaths = filePaths;
     threadNum = std::thread::hardware_concurrency() - 1;
     threads.resize(threadNum);
-    std::cout << "ThreadNum: " << threads.size() << std::endl;
+    // std::cout << "ThreadNum: " << threads.size() << std::endl;
 }
 
 std::vector<std::string> ThreadPool::VectorSplit(int i)

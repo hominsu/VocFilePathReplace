@@ -1,20 +1,18 @@
 #include "replace.h"
 
 
-Replace::Replace(const std::string& replace, const std::string& xmlname)
+Replace::Replace(const std::string& replace, const std::string& xmlname): replace(replace), xmlname(xmlname)
 {
-    this->replace = replace;
-    this->xmlname = xmlname;
-    filename_label_start = "<filename>";
-    filename_label_end = "</filename>";
-    path_label_start = "<path>";
-    path_label__end = "</path>";
-    filename_pos_start = 0;
-    filename_pos_end = 0;
-    filenameLength = 0;
-    path_pos_start = 0;
-    path_pos__end = 0;
-    pathLength = 0;
+    filename_label_start    = "<filename>";
+    filename_label_end      = "</filename>";
+    path_label_start        = "<path>";
+    path_label__end         = "</path>";
+    filename_pos_start  = 0;
+    filename_pos_end    = 0;
+    filenameLength      = 0;
+    path_pos_start      = 0;
+    path_pos__end       = 0;
+    pathLength          = 0;
 }
 
 bool Replace::work()
