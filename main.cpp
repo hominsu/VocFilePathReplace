@@ -1,9 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <mutex>
 #include "replace.h"
 #include "getfiles.h"
+#include "ThreadPool.h"
 
+std::mutex m_mutex;
 
 void help()
 {
@@ -15,6 +18,18 @@ void help()
 	std::cout << "For example: " << std::endl;
 	std::cout << "\t.\\main.exe C:\\Users\\17740\\Desktop\\DataSet\\ D:\\xyolo\\images\\train\\" 
 	<< std::endl << std::endl;
+}
+
+void work(std::vector<std::string> files, std::string replace)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    int size = files.size();
+    for (int i = 0; i < size; i++)
+    {
+        std::cout << files[i].c_str() << std::endl;
+        Replace r(replace, files[i]);
+        r.work();
+    }
 }
 
 int main(int argc, char **argv)
@@ -37,22 +52,12 @@ int main(int argc, char **argv)
     {
         filePath.pop_back();
     }
-    if(replace.find_last_of("\\") < replace.length() - 1)
-    {
-        replace.push_back('\\');
-    }
     
     // 获取目录中的全部xml文件的路径
     getFiles(filePath, files);
     
-    // 遍历容器中的文件路径
-    int size = files.size();
-    for (int i = 0; i < size; i++)
-    {
-        std::cout << files[i].c_str() << std::endl;
-        Replace r(replace, files[i]);
-        r.work();
-    }
+    ThreadPool threads(files);
+    threads.ThreadWork(work, replace);
     
 	return 0;
 }

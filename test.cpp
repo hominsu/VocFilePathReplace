@@ -73,7 +73,7 @@ void work(std::vector<std::string> filePaths, int threads)
 int main(void)
 {
     std::vector<std::string> filePaths;
-    for (int i = 0; i < 64; i++)
+    for (int i = 0; i < 16; i++)
     {
         filePaths.push_back(std::to_string(i + 1));
     }

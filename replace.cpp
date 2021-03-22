@@ -1,8 +1,10 @@
 #include "replace.h"
 
 
-Replace::Replace(const std::string& replace, const std::string& xmlname): replace(replace), xmlname(xmlname)
+Replace::Replace(const std::string& replace, const std::string& xmlname)
 {
+    this->replace = replace;
+    this->xmlname = xmlname;
     filename_label_start    = "<filename>";
     filename_label_end      = "</filename>";
     path_label_start        = "<path>";
@@ -13,6 +15,11 @@ Replace::Replace(const std::string& replace, const std::string& xmlname): replac
     path_pos_start      = 0;
     path_pos__end       = 0;
     pathLength          = 0;
+
+    if(this->replace.find_last_of("\\") < this->replace.length() - 1)
+    {
+        this->replace.push_back('\\');
+    }
 }
 
 bool Replace::work()
