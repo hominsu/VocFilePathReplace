@@ -1,12 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <mutex>
+#include <chrono>
 #include "replace.h"
 #include "getfiles.h"
-#include "ThreadPool.h"
 
-std::mutex m_mutex;
 
 void help()
 {
@@ -20,17 +18,6 @@ void help()
 	<< std::endl << std::endl;
 }
 
-void work(std::vector<std::string> files, std::string replace)
-{
-    std::lock_guard<std::mutex> lock(m_mutex);
-    int size = files.size();
-    for (int i = 0; i < size; i++)
-    {
-        std::cout << files[i].c_str() << std::endl;
-        Replace r(replace, files[i]);
-        r.work();
-    }
-}
 
 int main(int argc, char **argv)
 {
@@ -41,7 +28,8 @@ int main(int argc, char **argv)
         return 0;
     }
 
-	std::cout << std::endl;
+    // 开始计时
+    auto start = std::chrono::system_clock::now();
 
 	std::string filePath = argv[1];
     std::string replace = argv[2];
@@ -56,10 +44,23 @@ int main(int argc, char **argv)
     // 获取目录中的全部xml文件的路径
     getFiles(filePath, files);
     
-    ThreadPool threads(files);
-    threads.ThreadWork(work, replace);
+    std::cout << "Replace...";
+
+    int size = files.size();
+    for (int i = 0; i < size; i++)
+    {
+        //std::cout << files[i].c_str() << std::endl;
+        Replace r(replace, files[i]);
+        r.work();
+    }
+    
+    std::cout << "\rDone...   " << std::endl << std::endl;
+
+    // 结束计时
+    std::chrono::duration<double> diff = std::chrono::system_clock::now() - start;
+    std::cout << "\tUsed: " << diff.count() << " Second" << std::endl;
     
 	return 0;
 }
 
-// g++ .\main.cpp .\replace.cpp -o main
+// g++ --static main.cpp replace.cpp -o main
