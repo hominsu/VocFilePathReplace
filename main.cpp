@@ -6,13 +6,17 @@
 #include "getfiles.h"
 
 
-void help()
+void help(const char* name)
 {
+    std::string progname = name;
+    size_t lastPos = progname.find_last_of("/\\");
+    progname = progname.substr(lastPos + 1);
+
     // 显示帮助
 	std::cout << std::endl;
 	std::cout << "This tool replaces the file path of the image in the XML file in the dataset" << std::endl << std::endl;
     std::cout << "Usage: " << std::endl;
-	std::cout << "\tmain.exe [DataSet Path] [Replace Path]" << std::endl << std::endl;
+	std::cout <<  "\t.\\" << progname << " [DataSet Path] [Replace Path]" << std::endl << std::endl;
 	std::cout << "For example: " << std::endl;
 	std::cout << "\t.\\main.exe C:\\Users\\17740\\Desktop\\DataSet\\ D:\\xyolo\\images\\train\\" 
 	<< std::endl << std::endl;
@@ -24,7 +28,7 @@ int main(int argc, char **argv)
     // 显示帮助
 	if(argc == 1 || (argc == 2 &&(strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)))
     {
-        help();
+        help(argv[0]);
         return 0;
     }
 
