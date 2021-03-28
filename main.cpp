@@ -4,6 +4,7 @@
 #include <chrono>
 #include "replace.h"
 #include "getfiles.h"
+#include "timer.h"
 
 
 void help(const char* name)
@@ -48,17 +49,23 @@ int main(int argc, char **argv)
     // 获取目录中的全部xml文件的路径
     getFiles(filePath, files);
     
-    std::cout << "Replace...";
 
-    int size = files.size();
-    for (int i = 0; i < size; i++)
+    size_t i = 0;
+    size_t size = files.size();
+
+    Timer loader(100);
+    loader.start(size, i, std::string("Replace..."));
+
+    for (i = 0; i < size; i++)
     {
         //std::cout << files[i].c_str() << std::endl;
         Replace r(replace, files[i]);
         r.work();
     }
+
+    loader.stop();
     
-    std::cout << "\rDone...   " << std::endl << std::endl;
+    std::cout << "\rDone...          " << std::endl << std::endl;
 
     // 结束计时
     std::chrono::duration<double> diff = std::chrono::system_clock::now() - start;
