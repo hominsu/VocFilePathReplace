@@ -1,5 +1,4 @@
-.vscode/
-*.exe
-test/
-tempCodeRunnerFile.cpp
-*.zip
+.idea/
+cmake-build-*/
+rtf/
+CMakeLists.txt
