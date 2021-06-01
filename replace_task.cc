@@ -50,7 +50,7 @@ void ReplaceTask::ReplaceStr() {
   this->path_length_ = this->path_pos_end_ - this->path_pos_start_ - this->path_label_start_.length();
   this->str_.replace(this->path_pos_start_ + this->path_label_start_.length(),
                      this->path_length_,
-                     (this->replace_ + this->filename_).c_str());
+                     this->replace_ + this->filename_);
 
   std::fstream fp;
   fp.open(this->xml_name_.c_str());
