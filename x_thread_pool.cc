@@ -16,7 +16,7 @@ XThreadPool::~XThreadPool() {
  * @brief 初始化线程池
  * @param _thread_num 线程数量
  */
-void XThreadPool::InitialThreadPool(const int &_thread_num) {
+void XThreadPool::InitialThreadPool(const unsigned int &_thread_num) {
   std::unique_lock<std::mutex> lock(mutex_);
   this->thread_num_ = _thread_num;
   this->threads_.reserve(_thread_num);

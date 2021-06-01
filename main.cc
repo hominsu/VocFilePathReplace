@@ -2,23 +2,22 @@
 #include <vector>
 #include <string>
 #include <chrono>
-#include "replace.h"
 #include "getfiles.h"
 #include "x_thread_pool.h"
 #include "replace_task.h"
 
-void help(const char *name) {
-  std::string progname = name;
-  size_t lastPos = progname.find_last_of("/\\");
-  progname = progname.substr(lastPos + 1);
+void help(const char *_name) {
+  std::string exec_file_name = _name;
+  size_t lastPos = exec_file_name.find_last_of("/\\");
+  exec_file_name = exec_file_name.substr(lastPos + 1);
 
   // 显示帮助
   std::cout << std::endl;
   std::cout << "This tool replaces the file path of the image in the XML file in the dataset" << std::endl << std::endl;
   std::cout << "Usage: " << std::endl;
-  std::cout << "\t.\\" << progname << " [DataSet Path] [Replace Path]" << std::endl << std::endl;
+  std::cout << "\t.\\" << exec_file_name << " [DataSet Path] [Replace Path]" << std::endl << std::endl;
   std::cout << "For example: " << std::endl;
-  std::cout << "\t.\\main.exe C:\\Users\\17740\\Desktop\\DataSet\\ D:\\xyolo\\images\\train\\"
+  std::cout << "\t.\\" << exec_file_name << " C:\\Users\\17740\\Desktop\\DataSet\\ D:\\xyolo\\images\\train\\"
             << std::endl << std::endl;
 }
 
@@ -44,24 +43,31 @@ int main(int argc, char **argv) {
   // 获取目录中的全部xml文件的路径
   getFiles(filePath, files);
 
-  size_t i = 0;
   size_t size = files.size();
 
   // 初始化线程池
+  unsigned int core_num = std::thread::hardware_concurrency();
+
   XThreadPool thread_pool;
-  thread_pool.InitialThreadPool(1);
+  thread_pool.InitialThreadPool(core_num - 1);
   thread_pool.Start();
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-  // 添加任务
-  auto task1 = std::make_shared<ReplaceTask>();
-  task1->replace_str_ = replace;
-  task1->files_ = files;
-  thread_pool.AddTask(task1);
+  // 添加任务到任务队列
+  std::vector<std::shared_ptr<ReplaceTask>> tasks;
 
-  auto ret_1 = task1->GetReturn();
-  std::cout << "task1: " << ret_1 << std::endl;
+  for (int i = 0; i < core_num - 1; ++i) {
+    auto task = std::make_shared<ReplaceTask>();
+    tasks.push_back(task);
+    task->replace_str_ = replace;
+    task->files_ = files;
+    thread_pool.AddTask(task);
+  }
 
+  for (int i = 0; i < core_num - 1; ++i) {
+    auto ret = tasks[i]->GetReturn();
+    std::cout << "task" << i << ": " << ret << std::endl;
+  }
 
   std::cout << "\rDone...          " << std::endl << std::endl;
 

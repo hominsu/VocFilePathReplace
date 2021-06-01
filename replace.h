@@ -5,6 +5,11 @@
 #include <string>
 #include <vector>
 
+const char kFileNameLabelStart[] = "<filename>";
+const char kFileNameLabelEnd[] = "</filename>";
+const char kPathLabelStart[] = "<path>";
+const char kPathLabelEnd[] = "</path>";
+
 class Replace {
  private:
   std::string str_;
@@ -15,13 +20,15 @@ class Replace {
   std::string replace_str_;
 
  private:
+  const std::string filename_label_start_ = kFileNameLabelStart;
+  const std::string filename_label_end_ = kFileNameLabelEnd;
+  const std::string path_label_start_ = kPathLabelStart;
+  const std::string path_label_end_ = kPathLabelEnd;
+
+ private:
   std::string replace_;
   std::string xml_name_;
   std::string filename_;
-  std::string filename_label_start_ = "<filename_>";
-  std::string filename_label_end_ = "</filename_>";
-  std::string path_label_start_ = "<path>";
-  std::string path_label_end_ = "</path>";
   size_t filename_pos_start_ = 0;
   size_t filename_pos_end_ = 0;
   size_t filename_length_ = 0;

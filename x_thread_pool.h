@@ -39,7 +39,7 @@ class XTask {
  */
 class XThreadPool {
  private:
-  int thread_num_ = 0;  ///< 线程数量
+  unsigned int thread_num_ = 0;  ///< 线程数量
   std::vector<std::shared_ptr<std::thread>> threads_;  ///< 用于存放线程句柄
   std::mutex mutex_;  ///< 互斥量
   std::condition_variable cv_;  ///< 信号量
@@ -51,7 +51,7 @@ class XThreadPool {
   XThreadPool();
   ~XThreadPool();
 
-  void InitialThreadPool(const int &_thread_num);
+  void InitialThreadPool(const unsigned int &_thread_num);
   void Start();
   void Stop();
   void AddTask(std::shared_ptr<XTask> _task);
