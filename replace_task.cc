@@ -19,18 +19,20 @@ void ReplaceTask::Initial(const std::string &_replace, const std::string &_xml_n
 }
 
 void ReplaceTask::ReadFile() {
-  this->fp_.open(xml_name_.c_str());
+  std::fstream fp;
+  fp.open(this->xml_name_.c_str());
 
-  if (!fp_.is_open()) {
-    throw std::runtime_error(xml_name_ + std::string(" open failed"));
+  if (!fp.is_open()) {
+    throw std::runtime_error(this->xml_name_ + std::string(" open failed"));
   }
 
-  while (!fp_.eof()) {
+  while (!fp.eof()) {
     memset(this->buf, '\0', sizeof(this->buf));
-    this->fp_.getline(this->buf, 1024);
+    fp.getline(this->buf, 1024);
     this->str_.append(this->buf);
     this->str_.append("\n");
   }
+  fp.close();
   this->str_.pop_back();
 }
 
@@ -50,10 +52,13 @@ void ReplaceTask::ReplaceStr() {
                      this->path_length_,
                      (this->replace_ + this->filename_).c_str());
 
-  this->fp_.clear();
-  this->fp_.seekp(0, std::ios::beg);
-  this->fp_ << str_;
-  this->fp_.close();
+  std::fstream fp;
+  fp.open(this->xml_name_.c_str());
+  fp.seekp(0, std::ios::beg);
+  fp << this->str_;
+  fp.close();
+
+  this->str_.clear();
 }
 
 void ReplaceTask::Do(std::string _replace_str, std::vector<std::string> _files) {

@@ -46,7 +46,8 @@ int main(int argc, char **argv) {
   size_t size = files.size();
 
   // 初始化线程池
-  unsigned int core_num = std::thread::hardware_concurrency();
+//  unsigned int core_num = std::thread::hardware_concurrency();
+  unsigned int core_num = 2;
 
   XThreadPool thread_pool;
   thread_pool.InitialThreadPool(core_num - 1);

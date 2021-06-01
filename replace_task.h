@@ -27,7 +27,6 @@ class ReplaceTask : public XTask {
 
  private:
   std::string str_; ///< 保存从文件读取的字符
-  std::fstream fp_; ///< 文件流
   char buf[1024]{}; ///< 文件字符读取缓存
 
  private:

@@ -95,7 +95,7 @@ std::shared_ptr<XTask> XThreadPool::GetTask() {
 }
 
 void XThreadPool::Run() {
-  std::cout << "Run " << std::this_thread::get_id() << std::endl;
+//  std::cout << "Run " << std::this_thread::get_id() << std::endl;
   while (false == is_exit()) {
     auto task = GetTask();
 
