@@ -17,7 +17,7 @@ void help(const char *_name) {
   std::cout << "Usage: " << std::endl;
   std::cout << "\t.\\" << exec_file_name << " [DataSet Path] [Replace Path]" << std::endl << std::endl;
   std::cout << "For example: " << std::endl;
-  std::cout << "\t.\\" << exec_file_name << " C:\\Users\\17740\\Desktop\\DataSet\\ D:\\xyolo\\images\\train\\"
+  std::cout << "\t.\\" << exec_file_name << R"( C:\Users\17740\Desktop\DataSet\ D:\xyolo\images\train\)"
             << std::endl << std::endl;
 }
 
@@ -45,12 +45,16 @@ int main(int argc, char **argv) {
 
   size_t size = files.size();
 
-  // 初始化线程池
-  unsigned int core_num = std::thread::hardware_concurrency();
-  std::cout << "Using " << core_num - 1 << " Thread To Process Task" << std::endl;
+  // 获取线程数目
+  unsigned int use_thread_num = std::thread::hardware_concurrency() - 1;
+  if (1 == use_thread_num) {
+    use_thread_num = 1;
+  }
+  std::cout << "Using " << use_thread_num << " Thread To Process Task" << std::endl;
 
+  // 初始化线程池
   XThreadPool thread_pool;
-  thread_pool.InitialThreadPool(core_num - 1);
+  thread_pool.InitialThreadPool(use_thread_num);
   thread_pool.Start();
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
@@ -59,22 +63,22 @@ int main(int argc, char **argv) {
   // 文件切分容器
   std::vector<std::vector<std::string>> task_files;
 
-  // 文件任务切分
-  for (unsigned int i = 0; i < core_num - 1; ++i) {
+  // 文件替换任务切分
+  for (unsigned int i = 0; i < use_thread_num; ++i) {
     unsigned int start, end;
-    if (core_num - 2 != i) {
-      start = (size / (core_num - 1)) * i;
-      end = (size / (core_num - 1)) * (i + 1) - 1;
+    if (use_thread_num - 1 != i) {
+      start = (size / use_thread_num) * i;
+      end = (size / use_thread_num) * (i + 1) - 1;
       task_files.emplace_back(files.begin() + start, files.begin() + end);
     } else {
-      start = (size / (core_num - 1)) * i;
+      start = (size / use_thread_num) * i;
       end = size - 1;
       task_files.emplace_back(files.begin() + start, files.begin() + end);
     }
   }
 
   // 添加任务到任务队列
-  for (int i = 0; i < core_num - 1; ++i) {
+  for (int i = 0; i < use_thread_num; ++i) {
     auto task = std::make_shared<ReplaceTask>();
     tasks.push_back(task);
     task->replace_str_ = replace;
@@ -82,7 +86,8 @@ int main(int argc, char **argv) {
     thread_pool.AddTask(task);
   }
 
-  for (int i = 0; i < core_num - 1; ++i) {
+  // 获取任务执行结果
+  for (int i = 0; i < use_thread_num; ++i) {
     auto ret = tasks[i]->GetReturn();
     if (true == ret) {
       std::cout << "batch-" << i + 1 << ": succeed" << std::endl;
